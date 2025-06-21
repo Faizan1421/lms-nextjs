@@ -4,7 +4,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { authClient } from "@/lib/auth-clients"
-import { GithubIcon, Loader, Loader2, Send } from "lucide-react"
+import { Chrome, GithubIcon, Loader, Loader2, Send } from "lucide-react"
 import { useState, useTransition } from "react"
 import { toast } from "sonner"
 import { useRouter } from "next/navigation"
@@ -16,6 +16,7 @@ export default function LoginForm() {
     // startGithubTransition is a function that starts the transition
 
     const [githubIsPending, startGithubTransition] = useTransition()
+    const [googleIsPending, startGoogleTransition] = useTransition()
     const [emailIsPending, startEmailTransition] = useTransition()
     const [email, setEmail] = useState("")
     const router = useRouter()
@@ -39,7 +40,26 @@ export default function LoginForm() {
         }
       })
     }
-    
+    async function signInWithGoogle() {
+      startGoogleTransition(async () => {
+        try {
+          await authClient.signIn.social({
+            provider: "google",
+            callbackURL: "/",
+            fetchOptions: {
+                onSuccess: () => {
+                    toast.success("Signed in with Google, redirecting to home page...")
+                },
+                onError: () => {
+                    toast.error("Failed to sign in with Google")
+                }
+            }
+          })
+        } catch (error) {
+          toast.error("Failed to initiate Google sign in")
+        }
+      })
+    }
      function signInWithEmail() {
         startEmailTransition(async () => {
             try {
@@ -50,6 +70,9 @@ export default function LoginForm() {
                         onSuccess: () => {
                             toast.success("Verification email sent")
                             router.push(`/verify-request?email=${email}`)
+                        },
+                        onError: () => {
+                            toast.error("Failed to send verification email")
                         }
                     }
                 })
@@ -82,7 +105,22 @@ export default function LoginForm() {
             )
            }
         </Button>
-        <div className="relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t after:border-border">
+        <Button disabled={googleIsPending} onClick={signInWithGoogle} className="w-full cursor-pointer" variant="outline">
+           {
+            googleIsPending ? (
+                <>
+                <Loader className="size-4 animate-spin" />
+                <span>Loading...</span>
+                </>
+            ) : (
+                <>
+                <Chrome className="size-4 mr-2" />
+                Login with Google
+                </>
+            )
+           }
+        </Button>
+            <div className="relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t after:border-border">
             <span className="relative z-10 bg-card px-2 text-muted-foreground">Or continue with</span>
         </div>
         <div>

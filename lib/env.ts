@@ -8,6 +8,8 @@ export const env = createEnv({
     BETTER_AUTH_URL: z.string().url(),
     AUTH_GITHUB_CLIENT_ID: z.string().min(1),
     AUTH_GITHUB_SECRET: z.string().min(1),
+    AUTH_GOOGLE_CLIENT_ID: z.string().min(1),
+    AUTH_GOOGLE_SECRET: z.string().min(1),
     RESEND_API_KEY: z.string().min(1),
   },
   // For Next.js >= 13.4.4, you only need to destructure client variables:

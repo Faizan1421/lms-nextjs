@@ -4,9 +4,10 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { authClient } from "@/lib/auth-clients"
-import { GithubIcon, Loader } from "lucide-react"
-import { useTransition } from "react"
+import { GithubIcon, Loader, Loader2, Send } from "lucide-react"
+import { useState, useTransition } from "react"
 import { toast } from "sonner"
+import { useRouter } from "next/navigation"
 
 export default function LoginForm() {
        // for loading state of github login
@@ -15,7 +16,9 @@ export default function LoginForm() {
     // startGithubTransition is a function that starts the transition
 
     const [githubIsPending, startGithubTransition] = useTransition()
-
+    const [emailIsPending, startEmailTransition] = useTransition()
+    const [email, setEmail] = useState("")
+    const router = useRouter()
     async function signInWithGithub() {
       startGithubTransition(async () => {
         try {
@@ -36,6 +39,26 @@ export default function LoginForm() {
         }
       })
     }
+    
+     function signInWithEmail() {
+        startEmailTransition(async () => {
+            try {
+                await authClient.emailOtp.sendVerificationOtp({
+                    email,
+                    type: "sign-in",
+                    fetchOptions: {
+                        onSuccess: () => {
+                            toast.success("Verification email sent")
+                            router.push(`/verify-request?email=${email}`)
+                        }
+                    }
+                })
+            }catch(error){
+                toast.error("Failed to send verification email")
+            }
+        })
+     }
+    
 
   return (
    <Card className="w-full mx-auto">
@@ -66,9 +89,23 @@ export default function LoginForm() {
             <div className="grid gap-3">
                 <div className="grid gap-2">
                     <Label htmlFor="email">Email</Label>
-                    <Input id="email" placeholder="email@example.com" />
+                    <Input id="email" placeholder="email@example.com" value={email} onChange={(e) => setEmail(e.target.value)} required/>
                 </div>
-                <Button className="w-full cursor-pointer">Continue with email</Button>
+                <Button onClick={signInWithEmail} disabled={emailIsPending} className="w-full cursor-pointer">
+                    {
+                        emailIsPending ? (
+                            <>
+                            <Loader2 className="size-4 animate-spin" />
+                            <span>Loading...</span>
+                            </>
+                        ) : (
+                            <>
+                            <Send className="size-4 mr-2" />
+                            <span>Continue with email</span>
+                            </>
+                        )
+                    }
+                </Button>
             </div>
         </div>
     </CardContent>

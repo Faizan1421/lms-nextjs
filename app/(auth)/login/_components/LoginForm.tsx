@@ -30,14 +30,14 @@ export default function LoginForm() {
                   onSuccess: () => {
                       toast.success("Signed in with GitHub, redirecting to home page...")
                   },
-                  onError: () => {
-                      toast.error("Failed to sign in with GitHub")
+                  onError: (error: any) => {
+                      toast.error(error.error.message || "Failed to sign in with GitHub")
                   }
               }
           })
-        } catch (error) {
+        } catch (error: any) {
           toast.error("Failed to initiate GitHub sign in")
-        }
+        }   
       })
     }
     async function signInWithGoogle() {
@@ -50,12 +50,12 @@ export default function LoginForm() {
                 onSuccess: () => {
                     toast.success("Signed in with Google, redirecting to home page...")
                 },
-                onError: () => {
-                    toast.error("Failed to sign in with Google")
+                onError: (error: any) => {
+                    toast.error(error.error.message || "Failed to sign in with Google")
                 }
             }
           })
-        } catch (error) {
+        } catch (error: any) {
           toast.error("Failed to initiate Google sign in")
         }
       })
@@ -71,13 +71,13 @@ export default function LoginForm() {
                             toast.success("Verification email sent")
                             router.push(`/verify-request?email=${email}`)
                         },
-                        onError: () => {
-                            toast.error("Failed to send verification email")
+                            onError: (error: any) => {
+                            toast.error(error.error.message || "Failed to send verification email")
                         }
                     }
                 })
-            }catch(error){
-                toast.error("Failed to send verification email")
+            }catch(error: any){
+                toast.error(error.error.message || "Failed to send verification email")
             }
         })
      }

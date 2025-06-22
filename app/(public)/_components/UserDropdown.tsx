@@ -19,7 +19,6 @@ import {
 } from '@/components/ui/dropdown-menu';
 import Link from 'next/link';
 import { authClient } from '@/lib/auth-clients';
-import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
 import { useSignOut } from '@/hooks/use-signout';
 

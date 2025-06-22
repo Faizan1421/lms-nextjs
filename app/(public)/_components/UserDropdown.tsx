@@ -21,25 +21,14 @@ import Link from 'next/link';
 import { authClient } from '@/lib/auth-clients';
 import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
+import { useSignOut } from '@/hooks/use-signout';
 
 export function UserDropdown() {
   const router = useRouter();
   // Get the session
   const { data: session } = authClient.useSession();
-  // Sign out function
-  async function signOut() {
-    await authClient.signOut({
-      fetchOptions: {
-        onSuccess: () => {
-          toast.success('Signed out successfully');
-          router.push('/');
-        },
-        onError: (error: any) => {
-          toast.error(error.error.message || 'Failed to sign out');
-        },
-      },
-    });
-  }
+  // Sign out hook
+  const handleSignOut = useSignOut();
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -92,7 +81,7 @@ export function UserDropdown() {
           </DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
-        <DropdownMenuItem onClick={signOut}>
+        <DropdownMenuItem onClick={handleSignOut}>
           <LogOutIcon size={16} className="opacity-60" aria-hidden="true" />
           <span>Logout</span>
         </DropdownMenuItem>

@@ -6,7 +6,10 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "format:watch": "onchange '**/*.{js,ts,jsx,tsx,json,css,scss,md}' -- prettier --write {{changed}}"
   },
   "dependencies": {
     "@arcjet/inspect": "1.0.0-beta.8",
@@ -55,6 +58,8 @@
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "15.3.4",
+    "onchange": "^7.1.0",
+    "prettier": "3.5.3",
     "prisma": "^6.10.1",
     "tailwindcss": "^4",
     "tw-animate-css": "^1.3.4",

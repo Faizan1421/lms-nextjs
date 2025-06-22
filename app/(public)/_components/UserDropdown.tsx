@@ -1,14 +1,9 @@
 import {
-  BoltIcon,
   BookOpen,
-  BookOpenIcon,
   ChevronDownIcon,
   Home,
-  Layers2Icon,
   LayoutDashboardIcon,
   LogOutIcon,
-  PinIcon,
-  UserPenIcon,
 } from 'lucide-react';
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -29,6 +24,9 @@ import { useRouter } from 'next/navigation';
 
 export function UserDropdown() {
   const router = useRouter();
+  // Get the session
+  const { data: session } = authClient.useSession();
+  // Sign out function
   async function signOut() {
     await authClient.signOut({
       fetchOptions: {
@@ -47,8 +45,10 @@ export function UserDropdown() {
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" className="h-auto p-0 hover:bg-transparent">
           <Avatar>
-            <AvatarImage src="./avatar.jpg" alt="Profile image" />
-            <AvatarFallback>KK</AvatarFallback>
+            <AvatarImage src={session?.user?.image || ''} alt="Profile image" />
+            <AvatarFallback>
+              {session?.user?.name?.charAt(0).toUpperCase() || 'U'}
+            </AvatarFallback>
           </Avatar>
           <ChevronDownIcon
             size={16}
@@ -57,13 +57,13 @@ export function UserDropdown() {
           />
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="max-w-64">
+      <DropdownMenuContent align="end" className="max-w-64 mt-4">
         <DropdownMenuLabel className="flex min-w-0 flex-col">
           <span className="text-foreground truncate text-sm font-medium">
-            Keith Kennedy
+            {session?.user?.name}
           </span>
           <span className="text-muted-foreground truncate text-xs font-normal">
-            k.kennedy@originui.com
+            {session?.user?.email}
           </span>
         </DropdownMenuLabel>
         <DropdownMenuSeparator />

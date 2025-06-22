@@ -33,7 +33,13 @@ export function UserDropdown() {
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" className="h-auto p-0 hover:bg-transparent">
           <Avatar>
-            <AvatarImage src={session?.user?.image || ''} alt="Profile image" />
+            <AvatarImage
+              src={
+                session?.user?.image ??
+                `https://avatar.vercel.sh/${session?.user.email}`
+              }
+              alt="Profile image"
+            />
             <AvatarFallback>
               {(session?.user?.name &&
                 session?.user?.name.length > 0 &&
@@ -51,10 +57,14 @@ export function UserDropdown() {
       <DropdownMenuContent align="end" className="max-w-64 mt-4">
         <DropdownMenuLabel className="flex min-w-0 flex-col">
           <span className="text-foreground truncate text-sm font-medium">
-            {session?.user?.name}
+            {session?.user?.name && session?.user?.name.length > 0
+              ? session?.user?.name
+              : 'User'}
           </span>
           <span className="text-muted-foreground truncate text-xs font-normal">
-            {session?.user?.email}
+            {session?.user?.email && session?.user?.email.length > 0
+              ? session?.user?.email
+              : 'Email'}
           </span>
         </DropdownMenuLabel>
         <DropdownMenuSeparator />

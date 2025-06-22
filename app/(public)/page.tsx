@@ -1,49 +1,91 @@
-'use client';
-import { Button } from '@/components/ui/button';
-import { ThemeToggle } from '@/components/ui/themeToggle';
-import { authClient } from '@/lib/auth-clients';
-import { toast } from 'sonner';
-import { useRouter } from 'next/navigation';
+import { buttonVariants } from '@/components/ui/button';
 import Link from 'next/link';
+import { Badge } from '@/components/ui/badge';
+import { BookOpen, Clock, User, Users } from 'lucide-react';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
+
+interface featureProps {
+  title: string;
+  description: string;
+  icon: React.ReactNode;
+}
+
+const features: featureProps[] = [
+  {
+    title: 'Interactive Learning',
+    description:
+      'Learn through interactive lessons, quizzes, and hands-on projects',
+    icon: <BookOpen />,
+  },
+  {
+    title: 'Expert Instructors',
+    description: 'Learn from experienced instructors with real-world expertise',
+    icon: <User />,
+  },
+  {
+    title: 'Flexible Learning',
+    description:
+      'Learn at your own pace with flexible scheduling and access to materials',
+    icon: <Clock />,
+  },
+  {
+    title: 'Community Support',
+    description:
+      'Connect with a community of learners and get help from our support team',
+    icon: <Users />,
+  },
+];
 
 export default function Home() {
-  const router = useRouter();
-  const signOut = async () => {
-    await authClient.signOut({
-      fetchOptions: {
-        onSuccess: () => {
-          toast.success('Signed out successfully');
-          router.push('/login');
-        },
-        onError: (error) => {
-          toast.error(error.error.message || 'Failed to sign out');
-        },
-      },
-    });
-  };
-  // useSession is a hook that returns the session data, loading state, error, and refetch function
-  // authClient will be used on client component to get the session data
-  // if you want to use the session data on server component, you can use the auth.api.getSession function
-  const {
-    data: session,
-    // isPending,
-    // error,
-    // refetch
-  } = authClient.useSession();
   return (
-    <div className="flex flex-col items-center justify-center h-screen">
-      <ThemeToggle />
-      {session ? (
-        <div>
-          <h2>Welcome back, {session.user?.name}</h2>
-          <Button onClick={signOut}>Logout</Button>
+    <>
+      <section className="relative py-20">
+        <div className="flex flex-col items-center text-center space-y-8">
+          <Badge variant="outline">The Future of online Education</Badge>
+          <h1 className="text-4xl md:text-6xl font-bold tracking-tight">
+            Elevate your Learning Experience
+          </h1>
+          <p className="text-muted-foreground max-w-[700px] md:text-xl">
+            Discover a new way to learn with our modern, interactive learning
+            management system. Access high-quality courses anytime, anywhere
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4 mt-8">
+            <Link href="/courses" className={buttonVariants({ size: 'lg' })}>
+              Explore Courses
+            </Link>
+            <Link
+              href="/login"
+              className={buttonVariants({ size: 'lg', variant: 'outline' })}
+            >
+              Sign In
+            </Link>
+          </div>
         </div>
-      ) : (
-        <div>
-          <h2>Please sign in</h2>
-          <Link href="/login">Sign in with GitHub</Link>
-        </div>
-      )}
-    </div>
+      </section>
+      <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        {features.map((feature, index) => (
+          <Card
+            key={index}
+            className="hover:shadow-lg transition-all duration-300"
+          >
+            <CardHeader>
+              <div className="text-4xl mb-4">{feature.icon}</div>
+              <CardTitle>{feature.title}</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <CardDescription className="text-muted-foreground">
+                {feature.description}
+              </CardDescription>
+            </CardContent>
+          </Card>
+        ))}
+      </section>
+    </>
   );
 }

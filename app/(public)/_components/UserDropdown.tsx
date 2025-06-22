@@ -36,7 +36,10 @@ export function UserDropdown() {
           <Avatar>
             <AvatarImage src={session?.user?.image || ''} alt="Profile image" />
             <AvatarFallback>
-              {session?.user?.name?.charAt(0).toUpperCase() || 'U'}
+              {(session?.user?.name &&
+                session?.user?.name.length > 0 &&
+                session?.user?.name?.charAt(0).toUpperCase()) ||
+                'U'}
             </AvatarFallback>
           </Avatar>
           <ChevronDownIcon

@@ -1,14 +1,9 @@
 import {
-  BoltIcon,
   BookOpen,
-  BookOpenIcon,
   ChevronDownIcon,
   Home,
-  Layers2Icon,
   LayoutDashboardIcon,
   LogOutIcon,
-  PinIcon,
-  UserPenIcon,
 } from 'lucide-react';
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -29,7 +24,9 @@ import { useRouter } from 'next/navigation';
 
 export function UserDropdown() {
   const router = useRouter();
+  // Get the session
   const { data: session } = authClient.useSession();
+  // Sign out function
   async function signOut() {
     await authClient.signOut({
       fetchOptions: {
@@ -49,7 +46,9 @@ export function UserDropdown() {
         <Button variant="ghost" className="h-auto p-0 hover:bg-transparent">
           <Avatar>
             <AvatarImage src={session?.user?.image || ''} alt="Profile image" />
-            <AvatarFallback>{session?.user?.name?.charAt(0)}</AvatarFallback>
+            <AvatarFallback>
+              {session?.user?.name?.charAt(0).toUpperCase() || 'U'}
+            </AvatarFallback>
           </Avatar>
           <ChevronDownIcon
             size={16}
